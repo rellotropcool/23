@@ -1,0 +1,1 @@
+coucoucocu.o: coucoucocu.s

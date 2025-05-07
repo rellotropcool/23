@@ -1,16 +1,15 @@
 #include "../include/game.h"
 
-enum e_GameState GameState = PLAYING;
+enum e_GameState GameState = STARTING;
 
 int	main(void)
 {
 	consoleDemoInit();
 	keyboardDemoInit();
 
-	videoSetMode(MODE_5_2D);
-
 	t_data	data;
 	bzero(&data, sizeof(data));
+	data.myName[0] = 0;
     while(1)
 	{
 		switch (GameState)

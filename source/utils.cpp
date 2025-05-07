@@ -33,3 +33,15 @@ void    nget(char *dest, int n)
     keyboardHide();
     strncpy(dest, buffer, i + 1);
 }
+
+// void    freeVramB(void) 
+// {
+//     dmaFillHalfWords(0, (void*)VRAM_B, 0x2000);
+//     oamClear(&oamMain, 0, 128);
+// }
+
+// void    freeVramA(void)
+// {
+//     dmaFillHalfWords(0, (void*)BG_GFX, 0x10000);
+//     dmaFillHalfWords(0, (void*)BG_MAP, 0x1000);
+// }

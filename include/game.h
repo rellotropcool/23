@@ -12,6 +12,7 @@
 #include "drunkenlogo_2.h"
 #include "the_end.h"
 #include "cheese.h"
+#include "map.h"
 
 // SPRITES
 
@@ -64,7 +65,6 @@ typedef struct  s_data
 {
     char    myName[16];
 	t_player	player;
-	bool	moving;
 }   t_data;
 
 // GLOBAL VARIABLES
@@ -81,5 +81,7 @@ void	handlePlay(t_data *data);
 void initMan(t_player *sprite, u8* gfx);
 
 void    nget(char *dest, int n);
+void	freeVramA(void);
+void	freeVramB(void);
 
 #endif
