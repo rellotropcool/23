@@ -1,1 +1,0 @@
-cheese.o: cheese.s
