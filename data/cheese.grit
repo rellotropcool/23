@@ -1,0 +1,10 @@
+# 8 bit bitmap
+-gB8
+
+# tile based bg
+-g
+-m
+-mLs
+-mGs
+-p
+-fh

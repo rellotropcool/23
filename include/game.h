@@ -10,6 +10,8 @@
 
 #include "drunkenlogo.h"
 #include "drunkenlogo_2.h"
+#include "the_end.h"
+#include "cheese.h"
 
 // SPRITES
 
@@ -18,6 +20,8 @@
 // DEFINE
 
 #define FRAMES_PER_ANIMATION 3
+#define X_OFFSET 112
+#define Y_OFFSET 80
 
 // ENUM
 
@@ -49,9 +53,6 @@ enum
 
 typedef struct s_player
 {
-	int x;
-	int y;
-
 	u16* sprite_gfx_mem;
 	u8*  frame_gfx;
 

@@ -1,6 +1,6 @@
 #include "../include/game.h"
 
-enum e_GameState GameState = STARTING;
+enum e_GameState GameState = PLAYING;
 
 int	main(void)
 {
@@ -11,9 +11,6 @@ int	main(void)
 
 	t_data	data;
 	bzero(&data, sizeof(data));
-	data.player.x = 0;
-	data.player.y = 0;
-
     while(1)
 	{
 		switch (GameState)
