@@ -6,6 +6,10 @@
 #include <nds.h>
 #include <stdio.h>
 
+// test_osterone
+
+#include "int2.hpp"
+
 // TEXTURES
 
 #include "drunkenlogo.h"
@@ -13,6 +17,7 @@
 #include "the_end.h"
 #include "cheese.h"
 #include "map.h"
+#include "map2.h"
 
 // SPRITES
 
@@ -20,39 +25,30 @@
 
 // DEFINE
 
-#define FRAMES_PER_ANIMATION 3
-#define X_OFFSET 112
-#define Y_OFFSET 80
-
 // ENUM
+
+enum e_tileType
+{
+	WALK = 0 >> 1,
+
+};
 
 enum e_GameState 
 {
 	STARTING,
 	ASK_NAME,
-	PLAYING,
-	END
-};
-
-enum e_SpriteState 
-{
-	W_UP = 0, 
-	W_RIGHT = 1, 
-	W_DOWN = 2, 
-	W_LEFT = 3
-};
-
-enum 
-{
-	SCREEN_TOP = 0, 
-	SCREEN_BOTTOM = 192, 
-	SCREEN_LEFT = 0, 
-	SCREEN_RIGHT = 256
+	INGAME,
+	ENDGAME
 };
 
 // STRUCTURES
 
-typedef struct s_player
+typedef struct	s_room
+{
+	int2	roomSize;
+}	t_room;
+
+typedef struct	s_player
 {
 	u16* sprite_gfx_mem;
 	u8*  frame_gfx;
@@ -73,15 +69,12 @@ extern  enum e_GameState GameState;
 
 // PROTOTYPES
 
+void    nget(char *dest, int n);
+int		initBitmapBackground(const u16* bitmap, const u16* palette);
+
 void    handleStart(t_data *data);
 void    handleAsk(t_data *data);
 void    handleEnd(t_data *data);
 void	handlePlay(t_data *data);
-
-void initMan(t_player *sprite, u8* gfx);
-
-void    nget(char *dest, int n);
-void	freeVramA(void);
-void	freeVramB(void);
 
 #endif

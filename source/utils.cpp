@@ -34,14 +34,14 @@ void    nget(char *dest, int n)
     strncpy(dest, buffer, i + 1);
 }
 
-// void    freeVramB(void) 
-// {
-//     dmaFillHalfWords(0, (void*)VRAM_B, 0x2000);
-//     oamClear(&oamMain, 0, 128);
-// }
+int initBitmapBackground(const u16* bitmap, const u16* palette) 
+{
+	videoSetMode(MODE_5_2D);
+	vramSetBankA(VRAM_A_MAIN_BG);
 
-// void    freeVramA(void)
-// {
-//     dmaFillHalfWords(0, (void*)BG_GFX, 0x10000);
-//     dmaFillHalfWords(0, (void*)BG_MAP, 0x1000);
-// }
+	int bg = bgInit(3, BgType_Bmp8, BgSize_B8_256x256, 0, 0);
+	dmaCopy(bitmap, bgGetGfxPtr(bg), 256 * 256);
+	dmaCopy(palette, BG_PALETTE, 256 * 2);
+
+	return bg;
+}

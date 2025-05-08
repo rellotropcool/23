@@ -1,6 +1,6 @@
 #include "../include/game.h"
 
-enum e_GameState GameState = STARTING;
+enum e_GameState GameState = INGAME;
 
 int	main(void)
 {
@@ -20,10 +20,10 @@ int	main(void)
 			case ASK_NAME:
 				handleAsk(&data);
 				break;
-			case END:
+			case ENDGAME:
 				handleEnd(&data);
 				break;
-			case PLAYING:
+			case INGAME:
 				handlePlay(&data);
 				break;
 		}
