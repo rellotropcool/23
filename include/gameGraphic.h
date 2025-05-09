@@ -22,8 +22,7 @@ enum e_SpriteState
 	W_LEFT = 3
 };
 
-void    animatePlayer(t_player *sprite);
-void    initPlayer(t_player *sprite, u8* gfx);
+void    animatePlayer(t_sprite *sprite);
 void	hidePlayer(t_data *data);
 void	displaySpriteBg(int x, int y, t_data *data, int bg);
 void	displayFrame(int x, int y, int bg, t_data *data, bool moving, int animationDelay);

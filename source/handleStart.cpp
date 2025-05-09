@@ -1,4 +1,4 @@
-#include "../include/game.h"
+#include "../include/handleStart.h"
 
 void	handleStart(t_data *data)
 {

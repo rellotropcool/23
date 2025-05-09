@@ -5,6 +5,8 @@
 
 #include <nds.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // test_osterone
 
@@ -23,15 +25,7 @@
 
 #include "man.h"
 
-// DEFINE
-
 // ENUM
-
-enum e_tileType
-{
-	WALK = 0 >> 1,
-
-};
 
 enum e_GameState 
 {
@@ -43,38 +37,57 @@ enum e_GameState
 
 // STRUCTURES
 
-typedef struct	s_room
+typedef struct s_exit
 {
-	int2	roomSize;
-}	t_room;
+    int		tileX;
+    int		tileY;
+    t_room*	destination;
+    int		destX;
+    int		destY;
+}	t_exit;
 
-typedef struct	s_player
+typedef struct s_room
+{
+    // GFX
+
+    const   u16* tiles;
+    const   u16* map;
+    const   u16* palette;
+    int     tilesLen;
+    int     mapLen;
+    int     paletteLen;
+
+    // Collisions
+
+    int   	mapColl[4096];
+	int		mapX;
+	int		mapY;
+
+	// Links to other rooms
+
+
+    int     x;
+    int     y;
+}   t_room;
+
+typedef struct	s_sprite
 {
 	u16* sprite_gfx_mem;
 	u8*  frame_gfx;
 
 	int state;
 	int anim_frame;
-}	t_player;
+}	t_sprite;
 
 typedef struct  s_data
 {
-    char    myName[16];
-	t_player	player;
+    char    	myName[16];
+	t_sprite	player;
+	t_room*		rooms;
 }   t_data;
 
 // GLOBAL VARIABLES
 
 extern  enum e_GameState GameState;
-
-// PROTOTYPES
-
-void    nget(char *dest, int n);
-int		initBitmapBackground(const u16* bitmap, const u16* palette);
-
-void    handleStart(t_data *data);
-void    handleAsk(t_data *data);
-void    handleEnd(t_data *data);
-void	handlePlay(t_data *data);
 
 #endif

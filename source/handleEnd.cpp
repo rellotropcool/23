@@ -1,4 +1,4 @@
-#include "../include/game.h"
+#include "../include/handleEnd.h"
 
 void	handleEnd(t_data *t_data)
 {

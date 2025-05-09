@@ -2,10 +2,10 @@
 
 void	handlePlay(t_data *data) // test map 32x32 tiles de 8x8 pixels (oui c'est un fromage)
 {
-	static int			PlayState = INIT;
-	static t_PlayData	PlayData;
+	static int			playState = INIT;
+	static t_playData	playData;
 	static int mapColl[16][16] ={
-		{0,2,0,1,1,1,1,1,1,1,1,1,1,1,1,1},
+		{0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1},
 		{0,0,0,1,0,0,0,1,1,1,1,1,1,1,1,1},
 		{0,0,0,1,0,0,0,1,1,1,1,1,1,1,1,1},
 		{0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1},
@@ -13,7 +13,7 @@ void	handlePlay(t_data *data) // test map 32x32 tiles de 8x8 pixels (oui c'est u
 		{0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1},
 		{1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1},
 		{1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
-		{1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,3},
+		{1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
 		{1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
 		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -22,49 +22,38 @@ void	handlePlay(t_data *data) // test map 32x32 tiles de 8x8 pixels (oui c'est u
 		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}};
 
-	switch (PlayState)
+	switch (playState)
 	{
 		case INIT:
-			PlayData.x = 16;
-			PlayData.y = 16;
-			PlayData.targetX = PlayData.x;
-			PlayData.targetY = PlayData.y;
-			PlayData.moving = false;
+			playData.x = 16;
+			playData.y = 16;
+			playData.targetX = playData.x;
+			playData.targetY = playData.y;
+			playData.room = 0;
+			playData.moving = false;
 			data->player.state = W_DOWN;
 
-			PlayState = GFX_INIT;
+			playState = GFX_INIT;
 			break;
 		case GFX_INIT:
-			videoSetMode(MODE_0_2D);
-			vramSetBankA(VRAM_A_MAIN_BG);
+			playData.bg = initTiledBackground((u16*)mapTiles, (u16*)mapMap, (u16*)mapPal, mapTilesLen, mapMapLen, mapPalLen);
+			initMainSprite(&data->player, (u8*)manTiles, manPal);
 
-			PlayData.bg = bgInit(0, BgType_Text8bpp, BgSize_T_512x512, 31, 0);
-
-			dmaCopy(mapTiles, bgGetGfxPtr(PlayData.bg), mapTilesLen);
-			dmaCopy(mapMap, bgGetMapPtr(PlayData.bg), mapMapLen);
-			dmaCopy(mapPal, BG_PALETTE, mapPalLen);
-			
-			vramSetBankB(VRAM_B_MAIN_SPRITE);
-
-			oamInit(&oamMain, SpriteMapping_1D_128, false);
-			initPlayer(&data->player, (u8*)manTiles);
-			dmaCopy(manPal, SPRITE_PALETTE, 512);
-
-			PlayState = PLAYING;
+			playState = PLAYING;
 			break;
 		case PLAYING:
-			if (!PlayData.moving)
-				PlayData.moving = handleInput(data, &PlayData.x, &PlayData.y, &PlayData.targetX, &PlayData.targetY, PlayData.moving, mapColl, &PlayState);
-			updateFrame(data, &PlayData.x, &PlayData.y, PlayData.targetX, PlayData.targetY, &PlayData.moving, PlayData.bg);
+			playData.moving = handleInput(data, &playData.x, &playData.y, &playData.targetX, &playData.targetY, playData.moving, mapColl, &playState);
+			updateFrame(data, &playData.x, &playData.y, playData.targetX, playData.targetY, &playData.moving, playData.bg);
 			consoleClear();
 			iprintf("Player name is: %s\n", data->myName);
-			iprintf("x: %d y: %d\n", PlayData.x, PlayData.y);
-			iprintf("playerX: %d playerY: %d\n", PlayData.x / 16, PlayData.y / 16);
+			iprintf("x: %d y: %d\n", playData.x, playData.y);
+			iprintf("playerX: %d playerY: %d\n", playData.x / 16, playData.y / 16);
+			iprintf("A: %u B: %u\n", (unsigned int)(u16*)mapTiles, (unsigned int)data->rooms[playData.room].tiles);
 			break;
 		case END:
 			hidePlayer(data);
 
-			PlayState = GFX_INIT;
+			playState = GFX_INIT;
 			GameState = ENDGAME;
 			break;
 	}

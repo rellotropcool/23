@@ -1,4 +1,4 @@
-#include "../include/game.h"
+#include "../include/main.h"
 
 enum e_GameState GameState = INGAME;
 
@@ -10,6 +10,9 @@ int	main(void)
 	t_data	data;
 	bzero(&data, sizeof(data));
 	data.myName[0] = 0;
+	t_room	rooms[5];
+	roomInit(rooms);
+	data.rooms = rooms;
     while(1)
 	{
 		switch (GameState)

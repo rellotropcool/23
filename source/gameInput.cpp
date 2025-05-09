@@ -7,7 +7,7 @@ bool	checkColl(int x, int y, int mapColl[16][16])
 	return false;
 }
 
-bool	handleInput(t_data *data, int *x, int *y, int *targetX, int *targetY, bool moving, int mapColl[16][16], int *PlayState)
+bool	handleInput(t_data *data, int *x, int *y, int *targetX, int *targetY, bool moving, int mapColl[16][16], int *playState)
 {
 	scanKeys();
 
@@ -46,7 +46,7 @@ bool	handleInput(t_data *data, int *x, int *y, int *targetX, int *targetY, bool 
 		}
 		if (stop & KEY_A)
 		{
-			*PlayState = END;
+			*playState = END;
 			return (false);
 		}
 	}

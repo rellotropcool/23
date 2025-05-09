@@ -1,19 +1,12 @@
 #include "../include/gameGraphic.h"
 
-void	animatePlayer(t_player *sprite)
+void	animatePlayer(t_sprite *sprite)
 {
 	int frame = sprite->anim_frame + sprite->state * FRAMES_PER_ANIMATION;
 
 	u8* offset = sprite->frame_gfx + frame * 32*32;
 
 	dmaCopy(offset, sprite->sprite_gfx_mem, 32*32);
-}
-
-void	initPlayer(t_player *sprite, u8* gfx)
-{
-	sprite->sprite_gfx_mem = oamAllocateGfx(&oamMain, SpriteSize_32x32, SpriteColorFormat_256Color);
-
-	sprite->frame_gfx = (u8*)gfx;
 }
 
 void	hidePlayer(t_data *data)
@@ -91,11 +84,11 @@ void	updateFrame(t_data *data, int *x, int *y, int targetX, int targetY, bool *m
 			*y += 2;
 		else if (*y > targetY)
 			*y -= 2;
-		displayFrame(*x, *y, bg, data, *moving, 4);
+		displayFrame(*x, *y, bg, data, *moving, 5);
 	}
 	else
 	{
-		displayFrame(*x, *y, bg, data, *moving, 8);
+		displayFrame(*x, *y, bg, data, *moving, 10);
 		*moving = false;
 	}
 }
