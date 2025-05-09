@@ -12,16 +12,16 @@ int initBitmapBackground(const u16* bitmap, const u16* palette)
 	return bg;
 }
 
-int	initTiledBackground(const u16* tiles, const u16* map, const u16* palette, const int tilesLen, const int mapLen, const int paletteLen)
+int	initTiledBackground(t_room room)
 {
 	videoSetMode(MODE_0_2D);
 	vramSetBankA(VRAM_A_MAIN_BG);
 
 	int bg = bgInit(0, BgType_Text8bpp, BgSize_T_512x512, 31, 0);
 
-	dmaCopy(tiles, bgGetGfxPtr(bg), tilesLen);
-	dmaCopy(map, bgGetMapPtr(bg), mapLen);
-	dmaCopy(palette, BG_PALETTE, paletteLen);
+	dmaCopy(room.tiles, bgGetGfxPtr(bg), room.tilesLen);
+	dmaCopy(room.map, bgGetMapPtr(bg), room.mapLen);
+	dmaCopy(room.palette, BG_PALETTE, room.paletteLen);
 	return bg;
 }
 

@@ -17,10 +17,10 @@ void	hidePlayer(t_data *data)
 	oamUpdate(&oamMain);
 }
 
-void	displayPlayerBg(int x, int y, t_data *data, int bg)
+void	displayPlayerBg(int x, int y, t_data *data, int bg, t_playData *playData)
 {
 	int playerX = x;
-	int playerY = y - 16;
+	int playerY = y;
 	int cameraX = 0;
 	int cameraY = 0;
 
@@ -34,24 +34,24 @@ void	displayPlayerBg(int x, int y, t_data *data, int bg)
 		cameraY = playerY - Y_OFFSET;
 		playerY = Y_OFFSET;
 	}
-	if (cameraX > 256 - SCREEN_RIGHT)							// handle right side
+	if (cameraX > data->rooms[playData->roomId].mapX * 16 - SCREEN_RIGHT)							// handle right side
 	{
-		playerX = x - (256 - SCREEN_RIGHT);  
-		cameraX = 256 - SCREEN_RIGHT;
+		playerX = x - (data->rooms[playData->roomId].mapX * 16 - SCREEN_RIGHT);  
+		cameraX = data->rooms[playData->roomId].mapX * 16 - SCREEN_RIGHT;
 	}
-	if (cameraY > 256 - SCREEN_BOTTOM)							// handle bottom side
+	if (cameraY > data->rooms[playData->roomId].mapY * 16 - SCREEN_BOTTOM)							// handle bottom side
 	{
-		playerY = y - (256 - SCREEN_BOTTOM);  
-		cameraY = 256 - SCREEN_BOTTOM;
+		playerY = y - (data->rooms[playData->roomId].mapY * 16 - SCREEN_BOTTOM);  
+		cameraY = data->rooms[playData->roomId].mapY * 16 - SCREEN_BOTTOM;
 	}
-	oamSet(&oamMain, 0, playerX - 8, playerY, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, data->player.sprite_gfx_mem, -1, false, false, false, false, false);
+	//iprintf("mapX: %d mapY: %d\nplayerX: %d playerY: %d\ncameraX: %d cameraY: %d\n",data->rooms[playData->roomId].mapX, data->rooms[playData->roomId].mapY, playerX, playerY, cameraX, cameraY);
+	oamSet(&oamMain, 0, playerX - 8, playerY - 16, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, data->player.sprite_gfx_mem, -1, false, false, false, false, false);
 	bgSetScroll(bg, cameraX, cameraY);
 }
 
-void	displayFrame(int x, int y, int bg, t_data *data, bool moving, int animationDelay)
+void	displayFrame(int x, int y, int bg, t_data *data, bool moving, int animationDelay, t_playData *playData)
 {
 	static int frameDelayCounter = 0;
-	//const int animationDelay = 8;
 
 	if (moving)
 	{
@@ -66,29 +66,36 @@ void	displayFrame(int x, int y, int bg, t_data *data, bool moving, int animation
 	}
 
 	animatePlayer(&data->player);
-	displayPlayerBg(x, y, data, bg);
+	displayPlayerBg(x, y, data, bg, playData);
 	swiWaitForVBlank();
 	bgUpdate();
 	oamUpdate(&oamMain);
 }
 
-void	updateFrame(t_data *data, int *x, int *y, int targetX, int targetY, bool *moving, int bg)
+void	updateFrame(t_data *data, t_playData *playData)
 {
-	if (!(targetX == *x && targetY == *y))
+	static int x = 0;
+	static int y = 0;
+
+	if (!(playData->targetX * 16 == playData->x * 16 + x && playData->targetY * 16 == playData->y * 16 + y))
 	{
-		if (*x < targetX)
-			*x += 2;
-		else if (*x > targetX)
-			*x -= 2;
-		else if (*y < targetY)
-			*y += 2;
-		else if (*y > targetY)
-			*y -= 2;
-		displayFrame(*x, *y, bg, data, *moving, 5);
+		if (playData->x < playData->targetX)
+			x += 2;
+		else if (playData->x > playData->targetX)
+			x -= 2;
+		else if (playData->y < playData->targetY)
+			y += 2;
+		else if (playData->y > playData->targetY)
+			y -= 2;
+		displayFrame(playData->x * 16 + x, playData->y * 16 + y, playData->bg, data, playData->moving, 4, playData);
 	}
 	else
 	{
-		displayFrame(*x, *y, bg, data, *moving, 10);
-		*moving = false;
+		x = 0;
+		y = 0;
+		playData->x = playData->targetX;
+		playData->y = playData->targetY;
+		displayFrame(playData->x * 16, playData->y * 16, playData->bg, data, playData->moving, 10, playData);
+		playData->moving = false;
 	}
 }

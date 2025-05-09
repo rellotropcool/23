@@ -22,7 +22,7 @@ typedef struct s_playData
 	int                 y;
 	int                 targetX;
 	int                 targetY;
-    int                 room;
+    int                 roomId;
 	bool                moving;
 }   t_playData;
 

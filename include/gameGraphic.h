@@ -1,7 +1,10 @@
 #ifndef GAMEGRAPHIC_H
 #define GAMEGRAPHIC_H
 
-#include "game.h"
+#include "handlePlay.h"
+
+struct s_playData;  // <-- forward declaration
+typedef struct s_playData t_playData;
 
 enum 
 {
@@ -26,6 +29,6 @@ void    animatePlayer(t_sprite *sprite);
 void	hidePlayer(t_data *data);
 void	displaySpriteBg(int x, int y, t_data *data, int bg);
 void	displayFrame(int x, int y, int bg, t_data *data, bool moving, int animationDelay);
-void	updateFrame(t_data *data, int *x, int *y, int targetX, int targetY, bool *moving, int bg);
+void	updateFrame(t_data *data, t_playData *playData);
 
 #endif

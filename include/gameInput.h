@@ -3,7 +3,10 @@
 
 #include "handlePlay.h"
 
+struct s_playData;  // <-- forward declaration
+typedef struct s_playData t_playData;
+
 bool	checkColl(int x, int y, int mapColl[16][16]);
-bool	handleInput(t_data *data, int *x, int *y, int *targetX, int *targetY, bool moving, int mapColl[16][16], int *playState);
+void	handleInput(t_data *data, t_playData *playData, int *playState);
 
 #endif

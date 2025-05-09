@@ -3,6 +3,6 @@
 
 #include "game.h"
 
-void roomInit(t_room *rooms);
+void    roomInit(t_room *rooms);
 
 #endif

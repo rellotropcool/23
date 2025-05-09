@@ -1,13 +1,23 @@
 #include "../include/gameInput.h"
 
-bool	checkColl(int x, int y, int mapColl[16][16])
+bool	checkColl(int x, int y, uint8_t mapColl[128], int len)
 {
-	if (mapColl[y / 16][x / 16] == 0)
+	if (getCollisionBit(mapColl, y * len + x) == 0)
 		return true;
 	return false;
 }
 
-bool	handleInput(t_data *data, int *x, int *y, int *targetX, int *targetY, bool moving, int mapColl[16][16], int *playState)
+void	setNextRoom(t_data *data, t_playData *playData, int *playState)
+{
+	playData->x = data->rooms[playData->roomId].exit.destX;
+	playData->y = data->rooms[playData->roomId].exit.destY;
+	playData->targetX = playData->x;
+	playData->targetY = playData->y;
+	playData->roomId = data->rooms[playData->roomId].exit.destIndex;
+	*playState = GFX_INIT;
+}
+
+void	handleInput(t_data *data, t_playData *playData, int *playState)
 {
 	scanKeys();
 
@@ -16,46 +26,65 @@ bool	handleInput(t_data *data, int *x, int *y, int *targetX, int *targetY, bool 
 
 	if (keys)
 	{
-		if(keys & KEY_UP && moving == false)
+		if(keys & KEY_UP && playData->moving == false)
 		{
-			if (*targetY > 0 && data->player.state == W_UP)
-				*targetY -= 16;
 			data->player.state = W_UP;
-			moving = true;
+			if ((playData->x == data->rooms[playData->roomId].exit.tileX) && (playData->y - 1 == data->rooms[playData->roomId].exit.tileY))
+			{
+				setNextRoom(data, playData, playState);
+				return;
+			}
+			if (playData->targetY > 0 && data->player.state == W_UP)
+				playData->targetY -= 1;
+			playData->moving = true;
 		}
-		if(keys & KEY_LEFT && moving == false)
+		if(keys & KEY_LEFT && playData->moving == false)
 		{
-			if (*targetX > 0 && data->player.state == W_LEFT) 
-				*targetX -= 16;
 			data->player.state = W_LEFT;
-			moving = true;
+			if ((playData->x - 1 == data->rooms[playData->roomId].exit.tileX) && (playData->y == data->rooms[playData->roomId].exit.tileY))
+			{
+				setNextRoom(data, playData, playState);
+				return;
+			}
+			if (playData->targetX > 0 && data->player.state == W_LEFT) 
+				playData->targetX -= 1;
+			playData->moving = true;
 		}
-		if(keys & KEY_RIGHT && moving == false)
+		if(keys & KEY_RIGHT && playData->moving == false)
 		{
-			if (*targetX < 512 - 16 && data->player.state == W_RIGHT) 
-				*targetX += 16;
 			data->player.state = W_RIGHT;
-			moving = true;
+			if ((playData->x + 1 == data->rooms[playData->roomId].exit.tileX) && (playData->y == data->rooms[playData->roomId].exit.tileY))
+			{
+				setNextRoom(data, playData, playState);
+				return;
+			}
+			if (playData->targetX < data->rooms[playData->roomId].mapX - 1 && data->player.state == W_RIGHT) 
+				playData->targetX += 1;
+			playData->moving = true;
 		}
-		if(keys & KEY_DOWN && moving == false)
+		if(keys & KEY_DOWN && playData->moving == false)
 		{
-			if (*targetY < 512 - 32 && data->player.state == W_DOWN)
-				*targetY += 16;
 			data->player.state = W_DOWN;
-			moving = true;
+			if ((playData->x == data->rooms[playData->roomId].exit.tileX) && (playData->y + 1 == data->rooms[playData->roomId].exit.tileY))
+			{
+				setNextRoom(data, playData, playState);
+				return;
+			}
+			if (playData->targetY < data->rooms[playData->roomId].mapY - 1 && data->player.state == W_DOWN)
+				playData->targetY += 1;
+			playData->moving = true;
 		}
-		if (stop & KEY_A)
+		if (stop & KEY_B)
 		{
 			*playState = END;
-			return (false);
+			return ;
 		}
 	}
 	else 
 		data->player.anim_frame = 1;
-	if (!checkColl(*targetX, *targetY, mapColl))
+	if (!checkColl(playData->targetX, playData->targetY, data->rooms[playData->roomId].mapColl, data->rooms[playData->roomId].mapY))
 	{
-		*targetX = *x;
-		*targetY = *y;
+		playData->targetX = playData->x;
+		playData->targetY = playData->y;
 	}
-	return (moving);
 }

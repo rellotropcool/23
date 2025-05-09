@@ -11,9 +11,9 @@ int	main(void)
 	bzero(&data, sizeof(data));
 	data.myName[0] = 0;
 	t_room	rooms[5];
-	roomInit(rooms);
 	data.rooms = rooms;
-    while(1)
+	roomInit(data.rooms);
+	while(1)
 	{
 		switch (GameState)
 		{

@@ -33,3 +33,22 @@ void    nget(char *dest, int n)
     keyboardHide();
     strncpy(dest, buffer, i + 1);
 }
+
+bool getCollisionBit(const uint8_t *collisionMap, int i) 
+{
+    return (collisionMap[i / 8] >> (i % 8)) & 1;
+}
+
+void packCollisionMap(const int mapColl[1024], uint8_t *collisionMap) 
+{
+    for (int i = 0; i < 128; i++) 
+    {
+        collisionMap[i] = 0;
+    }
+
+    for (int i = 0; i < 1024; i++) 
+    {
+        if (mapColl[i])
+            collisionMap[i / 8] |= (1 << (i % 8));
+    }
+}

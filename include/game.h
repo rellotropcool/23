@@ -7,7 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <stdint.h>
+#include "utils.h"
 // test_osterone
 
 #include "int2.hpp"
@@ -37,11 +38,13 @@ enum e_GameState
 
 // STRUCTURES
 
+typedef struct s_room t_room;
+
 typedef struct s_exit
 {
     int		tileX;
     int		tileY;
-    t_room*	destination;
+    int		destIndex;
     int		destX;
     int		destY;
 }	t_exit;
@@ -59,16 +62,18 @@ typedef struct s_room
 
     // Collisions
 
-    int   	mapColl[4096];
+    uint8_t   	mapColl[128];
 	int		mapX;
 	int		mapY;
 
 	// Links to other rooms
 
+	t_exit exit;
+	// Player coos
 
     int     x;
     int     y;
-}   t_room;
+}	t_room;
 
 typedef struct	s_sprite
 {
